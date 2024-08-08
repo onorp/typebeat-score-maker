@@ -5,6 +5,8 @@ export class Song {
   arranger: string;
   lyricist: string;
   bpm: number;
+  difficulty: string;
+  level: number;
   notes: Note[];
   end: number;
 
@@ -15,6 +17,8 @@ export class Song {
     composer: string,
     arranger: string,
     lyricist: string,
+    difficulty: string,
+    level: number,
     bpm: number,
     notes: Note[],
     end: number,
@@ -25,6 +29,8 @@ export class Song {
     composer?: string,
     arranger?: string,
     lyricist?: string,
+    difficulty?: string,
+    level?: number,
     bpm?: number,
     notes?: Note[],
     end?: number,
@@ -35,6 +41,8 @@ export class Song {
     this.arranger = arranger ? arranger : "";
     this.lyricist = lyricist ? lyricist : "";
     this.bpm = bpm ? bpm : 0;
+    this.difficulty = difficulty ? difficulty : "";
+    this.level = level ? level : 0;
     this.notes = notes ? notes : [];
     this.end = end ? end : 0;
   }

@@ -10,6 +10,7 @@ import {
 } from "@nextui-org/modal";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
+import {RadioGroup, Radio} from "@nextui-org/radio";
 import { useAtom } from "jotai/index";
 import { useEffect, useState } from "react";
 import { useSetAtom } from "jotai";
@@ -43,6 +44,8 @@ export default function SongSettings() {
   const [arranger, setArranger] = useState("");
   const [lyricist, setLyricist] = useState("");
   const [bpm, setBpm] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [level, setLevel] = useState("");
 
   useEffect(() => {
     if (song && song.id === "" && !isOpen) {
@@ -58,6 +61,8 @@ export default function SongSettings() {
       setArranger("");
       setLyricist("");
       setBpm("");
+      setDifficulty("");
+      setLevel("");
       onOpen();
     }
   }, [song, isOpen]);
@@ -129,6 +134,28 @@ export default function SongSettings() {
                     setBpm(e.target.value);
                   }}
                 />
+                <RadioGroup
+                  className={"text-sm"}
+                  isRequired={true}
+                  label="難易度 を選択"
+                  orientation={"horizontal"}
+                  onChange={(e) => {
+                    setDifficulty(e.target.value);
+                  }}
+                >
+                  <Radio value="0">Easy</Radio>
+                  <Radio value="1">Normal</Radio>
+                  <Radio value="2">Hard</Radio>
+                </RadioGroup>
+                <Input
+                  isRequired
+                  label="レベル"
+                  placeholder="レベル を入力"
+                  variant="bordered"
+                  onChange={(e) => {
+                    setLevel(e.target.value);
+                  }}
+                />
                 <AudioSelector />
               </ModalBody>
               <ModalFooter>
@@ -162,12 +189,33 @@ export default function SongSettings() {
 
                         return;
                       }
+                      if (difficulty === "") {
+                        setErrorMessage("難易度を選択してください");
+
+                        return;
+                      }
+                      if (!isNumericString(bpm)) {
+                        setErrorMessage("BPM は数字で入力してください");
+
+                        return;
+                      }
+                      const numberLevel = Number(level);
+
+                      if (numberLevel <= 0) {
+                        setErrorMessage(
+                          "レベル は 0 より大きい値を入力してください",
+                        );
+
+                        return;
+                      }
                       let modifiedSong = new Song(
                         song?.id || "",
                         song?.name || "",
                         song?.composer || "",
                         song?.arranger || "",
                         song?.lyricist || "",
+                        song?.difficulty || "",
+                        song?.level || 0,
                         song?.bpm || 0,
                         song?.notes || [],
                         song?.end || 0,
@@ -179,6 +227,8 @@ export default function SongSettings() {
                       modifiedSong.arranger = arranger;
                       modifiedSong.lyricist = lyricist;
                       modifiedSong.bpm = numberBPM;
+                      modifiedSong.difficulty = difficulty;
+                      modifiedSong.level = numberLevel;
                       if (song) modifiedSong.notes = song.notes;
                       setSong(modifiedSong);
                       onClose();

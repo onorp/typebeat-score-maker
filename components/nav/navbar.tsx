@@ -41,7 +41,7 @@ export const Navbar = () => {
                   const a = document.createElement("a");
 
                   a.href = url;
-                  a.download = "data.json";
+                  a.download = `${song.difficulty}.json`;
                   a.click();
                   URL.revokeObjectURL(url);
                 }
