@@ -45,6 +45,8 @@ export default function KeyboardInput() {
         song.composer,
         song.arranger,
         song.lyricist,
+        song.difficulty,
+        song.level,
         song.bpm,
         song.notes.map((note) =>
           note.timing === selectedNote.timing ? newNote : note,
