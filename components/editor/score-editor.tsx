@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
 
 import SongSettings from "@/components/editor/song-settings";
@@ -35,6 +35,22 @@ export default function ScoreEditor() {
   const [selectedNote, setSelectedNote] = useAtom(selectingNote);
 
   const [isDragging, setIsDragging] = useState(false);
+
+  const gridInterval = useMemo(() => {
+    if (!song) return 0;
+
+    return 60 / song.bpm;
+  }, [song]);
+
+  const snapInterval = useMemo(() => {
+    const snapSize = Number([...nowSnapGrid][0]);
+
+    if (snapSize === 3) {
+      return gridInterval / 3;
+    }
+
+    return gridInterval / (snapSize / 4);
+  }, [gridInterval, nowSnapGrid]);
 
   useEffect(() => {
     const updateCurrentTime = () => {
@@ -135,13 +151,6 @@ export default function ScoreEditor() {
                   song.notes,
                   song.end,
                 );
-
-                const snapSize = Number([...nowSnapGrid][0]);
-                let snapInterval = 1 / (snapSize / 2);
-
-                if (snapSize == 3) {
-                  snapInterval = 1 / 3 / 2;
-                }
 
                 time = Math.round(time / snapInterval) * snapInterval;
 
